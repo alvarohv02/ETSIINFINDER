@@ -75,12 +75,13 @@ async def match_made():
             name=f"private-{user_1.name}-{user_2.name}",
             overwrites=overwrites
         )
-        await channel.send(f"{user_1.mention} y {user_2.mention}, se ha creado este canal porque habéis coincidido en lo que 
-                           buscáis.\n{user_1.mention} tiene estas aficiones: {db[user_1.id]["hobbies"]} 
+        await channel.send(f"{user_1.mention} y {user_2.mention}, se ha creado este canal porque habéis coincidido en lo que \
+                           buscáis.\n{user_1.mention} tiene estas aficiones: {db[user_1.id]["hobbies"]} \
                            y {user_2.mention} tiene estas aficiones: {db[user_2.id]["hobbies"]}.")
-        await channel.send(f"Ahora teneis tiempo para hablar y conoceros, este canal se quedará abierto 12h, si despues de eso
-                           quereis seguir hablando, hacedlo por dm (mensaje directo), si quereis cerrar esta conversación y seguir buscando match,
-                           podeis hacerlo con el comando '/next' si por el contrario, quereis cerrarlo y no volver a buscar, usad '/close'.")
+        await channel.send(f"Ahora teneis tiempo para hablar y conoceros, este canal se quedará abierto 12h, si despues de eso\
+                           quereis seguir hablando, hacedlo por dm (mensaje directo), si quereis cerrar esta conversación y \
+                           seguir buscando match, podeis hacerlo con el comando '/next' si por el contrario, \
+                            quereis cerrarlo y no volver a buscar, usad '/close'.")
 
 @bot.command(name="next")
 async def next(ctx : commands.Context):
