@@ -6,7 +6,7 @@ import sqlite3
 import asyncio
 from random import randint
 from dotenv import load_dotenv
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
 import re
 import uuid
 
@@ -14,9 +14,9 @@ load_dotenv()
 
 MAIL_REGEX = r'^[a-zA-Z0-9._%+-]+@alumnos\.upm\.es$'
 
-bot = commands.Bot(command_prefix="!", intents=discord.Intents().all())
+bot = commands.Bot(command_prefix="/", intents=discord.Intents().all())
 
-
+match : Tuple[int, int] = ()
 
 db : Dict[int, Dict[str, Any]] = {}
 
@@ -41,7 +41,7 @@ async def mail_message(message : discord.Message):
         db[message.author.id]["mail"] = message.content
         if re.match(MAIL_REGEX, message.content):
             channel = bot.get_channel(int(os.environ("ADMIN_CHANNEL_ID")))
-            await channel.send(f"Un usuario no ha introducido un correo @alumnos.upm.es: {message.author.name}, ha introducido el correo: {message.content}")
+            await channel.send(f"Un usuario no ha introducido un correo @alumnos.upm.es: {message.author.name} ha introducido el correo: {message.content}")
         await message.delete()
 
 @bot.event
@@ -50,13 +50,42 @@ async def hobbies_message(message : discord.Message):
         return
     
     elif message.channel.id == int(os.environ("HOBBIES_ID")):
-        db[message.author.id]["hobbies"] = message.content
+        db[message.author.id]["hobbies"] = message.content.lower()
         await message.delete()
     
 @bot.event
 async def on_message_join(member : discord.Member):
     roles = [role.name for role in member.roles if role.name != "@everyone"]
     db[member.id]["roles"] = roles
+
+@bot.event
+async def match_made():
+    if len(match) == 2:
+        guild = await bot.fetch_guild(int(os.environ("GUILD_ID")))
+        user_1 = await bot.fetch_user(match[0])
+        user_2 = await bot.fetch_user(match[1])
+        overwrites = {
+            guild.default_role: discord.PermissionOverwrite(view_channel=False),
+            guild.me : discord.PermissionOverwrite(view_channel = True, send_messages = True),
+            user_1 : discord.PermissionOverwrite(view_channel = True, send_messages = True),
+            user_2 : discord.PermissionOverwrite(view_channel = True, send_messages = True)
+        }
+        
+        channel = await guild.create_text_channel(
+            name=f"private-{user_1.name}-{user_2.name}",
+            overwrites=overwrites
+        )
+        await channel.send(f"{user_1.mention} y {user_2.mention}, se ha creado este canal porque habéis coincidido en lo que 
+                           buscáis.\n{user_1.mention} tiene estas aficiones: {db[user_1.id]["hobbies"]} 
+                           y {user_2.mention} tiene estas aficiones: {db[user_2.id]["hobbies"]}.")
+        await channel.send(f"Ahora teneis tiempo para hablar y conoceros, este canal se quedará abierto 12h, si despues de eso
+                           quereis seguir hablando, hacedlo por dm (mensaje directo), si quereis cerrar esta conversación y seguir buscando match,
+                           podeis hacerlo con el comando '/next' si por el contrario, quereis cerrarlo y no volver a buscar, usad '/close'.")
+
+@bot.command(name="next")
+async def next(ctx : commands.Context):
+    await ctx.send(f"El canal será cerrado ya que {ctx.author.mention} ha utilizado /next")
+    await ctx.channel.delete()
 
 '''
     # channel = bot.get_channel(int(os.environ["CHANNEL_ID"]))

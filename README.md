@@ -1,6 +1,6 @@
 # ETSIINFINDER
 
-## ETSIINFINDER is a bot made for DA-ETSIINF's valentines event
+## ETSIINFINDER is a discord bot made for DA-ETSIINF's valentines event
 
 When someone joins a server, it saves the roles assigned in the pre-union form and asks for an official upm mail and hobbies.
 
@@ -15,5 +15,7 @@ For running the bot you need to create a discord server and a .env file to save 
 > *HOBBIES_ID*: Channel id where you want the hobbies to be sent
 >
 > *ADMIN_CHANNEL_ID*: Channel id only visible for server administrators where every mail sent not ending in @alumnos.upm.es will be notified and studied by moderators
+>
+> *GUILD_ID*: Guild_id needed when creating the match channel
 
 Whenever this credentials are stored, just exeute bot.py file and bot will start running.
