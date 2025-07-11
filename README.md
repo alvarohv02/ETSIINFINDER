@@ -8,14 +8,24 @@ The mail is asked so no proffesor can join the activity.
 
 For running the bot you need to create a discord server and a .env file to save the following credentials:
 
-> *TOKEN* : Unique token of your discord bot
->
-> *MAIL_ID*: Channel id where you want the mail to be sent
->
-> *HOBBIES_ID*: Channel id where you want the hobbies to be sent
->
-> *ADMIN_CHANNEL_ID*: Channel id only visible for server administrators where every mail sent not ending in @alumnos.upm.es will be notified and studied by moderators
->
-> *GUILD_ID*: Guild_id needed when creating the match channel
+> * *TOKEN* : Unique token of your discord bot
+> * *MAIL_ID*: Channel id where you want the mail to be sent
+> * *HOBBIES_ID*: Channel id where you want the hobbies to be sent
+> * *ADMIN_CHANNEL_ID*: Channel id only visible for server administrators where every mail sent not ending in @alumnos.upm.es will be notified and studied by moderators
+> * *GUILD_ID*: Guild_id needed when creating the match channel
+> * *DB_DIR*: Database adress
+> * *FINDER_ID*: Channel id where the bot will send the button to start looking for match
 
-Whenever this credentials are stored, just exeute bot.py file and bot will start running.
+It is also required a single-table database named "Users" for data storage, its columns shoud be:
+
+> * ID:	INTEGER UNIQUE PRIMARY KEY
+> * mail:	TEXT
+> * hobbies:	TEXT
+> * gender:	TEXT
+> * looking:	TEXT
+> * match_made:	INTEGER
+> * ghost_ban:	INTEGER
+
+The libraries used are in the requirements file.
+
+Whenever this credentials are stored and the database is created, just exeute bot.py file and bot will start running.
